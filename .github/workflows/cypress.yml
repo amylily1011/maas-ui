@@ -3,7 +3,7 @@ on: [push]
 jobs:
   cypress:
     name: Cypress
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-18.04
     env:
       MAAS_PORT: 9000
     steps:

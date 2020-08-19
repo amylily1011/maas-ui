@@ -25,7 +25,7 @@ jobs:
       - name: Start MAAS
         run: sudo snap start maas
       - name: Curl maas
-        run: curl http://${{env.IP_ADDRESS}}:${{env.MAAS_PORT}}/MAAS/r/machines
+        run: curl -vv http://${{env.IP_ADDRESS}}:${{env.MAAS_PORT}}/MAAS/r/machines
       - uses: cypress-io/github-action@master
         with:
           working-directory: proxy

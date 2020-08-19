@@ -26,6 +26,7 @@ jobs:
         with:
           working-directory: proxy
           config: baseUrl=http://${{env.IP_ADDRESS}}:5240,pageLoadTimeout=100000
+          wait-on: "http://${{env.IP_ADDRESS}}:5240/MAAS/r/machines"
       - uses: actions/upload-artifact@v1
         if: failure()
         with:

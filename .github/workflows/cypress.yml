@@ -4,22 +4,6 @@ jobs:
   cypress:
     name: Cypress
     runs-on: ubuntu-20.04
-    env:
-      POSTGRES_VERSION: 10
-      MAAS_DBNAME: maasdb
-      MAAS_DBUSER: maas
-      MAAS_DBPASS: maasdbpass
-    services:
-      postgres:
-        image: postgres:10
-        env:
-          POSTGRES_DB: maasdb
-          POSTGRES_USER: maas
-          POSTGRES_PASSWORD: maasdbpass
-        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
-        ports:
-          # Maps tcp port 5432 on service container to the host
-          - 5432:5432
     steps:
       - uses: actions/checkout@main
       - name: Set environment variables
@@ -28,12 +12,13 @@ jobs:
         run: |
           sudo systemctl enable snapd
           sudo snap install maas --channel=latest/edge
+          sudo snap install maas-test-db
           sudo snap start maas
       - name: Initialise MAAS
         run: |
           sudo maas init region+rack \
             --maas-url=http://${{env.IP_ADDRESS}}:5240/MAAS \
-            --database-uri=postgres://$MAAS_DBUSER:$MAAS_DBPASS@localhost/$MAAS_DBNAME
+            --database-uri maas-test-db:///
       - name: Create MAAS admin
         run: sudo maas createadmin --username=admin --password=test --email=fake@example.org
       - uses: cypress-io/github-action@master

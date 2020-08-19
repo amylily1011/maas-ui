@@ -5,6 +5,8 @@ jobs:
     name: Cypress
     runs-on: ubuntu-20.04
     steps:
+      - env:
+        MAAS_PORT: 9000
       - uses: actions/checkout@main
       - name: Set environment variables
         run: echo "::set-env name=IP_ADDRESS::$(hostname -I | cut -d" " -f1)"
@@ -16,19 +18,19 @@ jobs:
       - name: Initialise MAAS
         run: |
           sudo maas init region+rack \
-            --maas-url=http://${{env.IP_ADDRESS}}:5240/MAAS \
+            --maas-url=http://${{env.IP_ADDRESS}}:${{env.MAAS_PORT}}/MAAS \
             --database-uri maas-test-db:///
       - name: Create MAAS admin
         run: sudo maas createadmin --username=admin --password=test --email=fake@example.org
       - name: Start MAAS
         run: sudo snap start maas
       - name: Curl maas
-        run: curl http://${{env.IP_ADDRESS}}:5240/MAAS/r/machines
+        run: curl http://${{env.IP_ADDRESS}}:${{env.MAAS_PORT}}/MAAS/r/machines
       - uses: cypress-io/github-action@master
         with:
           working-directory: proxy
-          config: baseUrl=http://${{env.IP_ADDRESS}}:5240,pageLoadTimeout=100000
-          wait-on: "http://${{env.IP_ADDRESS}}:5240/MAAS/r/machines"
+          config: baseUrl=http://${{env.IP_ADDRESS}}:${{env.MAAS_PORT}},pageLoadTimeout=100000
+          wait-on: "http://${{env.IP_ADDRESS}}:${{env.MAAS_PORT}}/MAAS/r/machines"
       - uses: actions/upload-artifact@v1
         if: failure()
         with:

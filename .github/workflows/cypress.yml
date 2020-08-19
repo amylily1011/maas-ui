@@ -4,9 +4,9 @@ jobs:
   cypress:
     name: Cypress
     runs-on: ubuntu-20.04
+    env:
+      MAAS_PORT: 9000
     steps:
-      - env:
-        MAAS_PORT: 9000
       - uses: actions/checkout@main
       - name: Set environment variables
         run: echo "::set-env name=IP_ADDRESS::$(hostname -I | cut -d" " -f1)"

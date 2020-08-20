@@ -26,8 +26,8 @@ jobs:
         run: sudo snap start maas
       - name: Sleep for 30 seconds
         uses: jakejarvis/wait-action@master
-          with:
-            time: '30s'
+        with:
+          time: "30s"
       - name: Curl maas
         run: curl -vv http://${{env.IP_ADDRESS}}:${{env.MAAS_PORT}}/MAAS/r/machines
       - uses: cypress-io/github-action@master

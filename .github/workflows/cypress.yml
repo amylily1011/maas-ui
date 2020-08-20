@@ -30,7 +30,7 @@ jobs:
         with:
           working-directory: proxy
           config: baseUrl=http://${{env.IP_ADDRESS}}:${{env.MAAS_PORT}},pageLoadTimeout=100000
-          wait-on: "http://${{env.IP_ADDRESS}}:${{env.MAAS_PORT}}/MAAS/r/machines"
+          wait-on: "tcp:${{env.MAAS_PORT}}"
       - uses: actions/upload-artifact@v1
         if: failure()
         with:
